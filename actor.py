@@ -79,7 +79,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         # scale by 3 because the original sprites are small
-        self.anim = Animator("player.png", 5, 1, scale_by=3)
+        self.anim = Animator("player.png", 5, 1, scale_by=2)
         # animations start at 0 and go until 4, all on the 0th row
         # may be different depending on your sprite sheet
         self.anim.registerAnim("stand", (0, 0))
