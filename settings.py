@@ -1,13 +1,13 @@
 level1_map = ['                            ',
               '                            ',
-              '                            ',
-              'XX     XXX             XX   ',
-              'XX                          ',
-              'XXXX           XX         XX',
-              'XXXXX        XX             ',
-              'XX         XXXX     XX  XX  ',
-              '        X  XXXX     XX  XXX ',
-              '     XXXX  XXXXXX   XX  XXXX',
+              'X                           ',
+              'X      XXX                  ',
+              'XX                   XX     ',
+              'XX          XXXXX         XX',
+              'XX          XXX             ',
+              'XX          XXX     XX  XX  ',
+              'X       X   XXX     XX  XXX ',
+              'X    XXXX   XXXXX   XX  XXXX',
               'XXXXXXXXXXXXXXXXXXXXXXXXXXXX']
 
 tile_size = 64
