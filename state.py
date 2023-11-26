@@ -1,4 +1,5 @@
 import pygame.locals as keys
+import pygame
 
 class PlayerState:
     """
@@ -53,6 +54,7 @@ class StandingState(PlayerState):
         """
         super().__init__(parent, "stand", flip, jump)
         self.parent.kinem.vel_x = 0
+        self.parent.kinem.accel_y = 0.5
 
     def processInput(self, pressed):
         """
@@ -155,6 +157,8 @@ class FirstFallingState(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
+        if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+            return WallSlideState(self.parent, self.flip)
 
 class SecondJumpState(PlayerState):
     """
@@ -164,6 +168,7 @@ class SecondJumpState(PlayerState):
         super().__init__(parent, "jump", flip)
         self.parent.kinem.vel_y = -10
         self.parent.kinem.vel_x = 0
+        self.parent.kinem.accel_y = 0.5
 
     def processInput(self, pressed):
         if pressed[keys.K_LEFT]:
@@ -185,6 +190,8 @@ class SecondFallingState(PlayerState):
     """
     def __init__(self, parent, flip=False):
         super().__init__(parent, "fall", flip)
+        self.parent.kinem.accel_y = 0.5
+
 
     def processInput(self, pressed):
         if pressed[keys.K_LEFT]:
@@ -199,3 +206,56 @@ class SecondFallingState(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
+        if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+            return WallSlideState(self.parent, self.flip)
+        
+        
+class WallSlideState(PlayerState):
+    """
+    State for when player is sliding on wall
+    """
+    def __init__(self, parent, flip=False, jump=False):
+        super().__init__(parent, "stand", flip, jump)
+        self.parent.kinem.accel_y = 0.1
+
+    def processInput(self, pressed):
+        if not pressed[keys.K_SPACE]:
+            self.jump = True
+        if pressed[keys.K_SPACE] and self.jump == True:
+            return WallJumpState(self.parent, self.flip)
+        if pressed[keys.K_LEFT]:
+            self.parent.kinem.vel_x = -5
+            self.flip = True
+            self.parent.anim.flipHoriz(flip=True)
+        if pressed[keys.K_RIGHT]:
+            self.parent.kinem.vel_x = 5
+            self.flip = False
+            self.parent.anim.flipHoriz(flip=False)
+
+    def update(self):
+        if self.parent.kinem.vel_y == 0:
+            return StandingState(self.parent, self.flip)
+        
+class WallJumpState(PlayerState):
+    """
+    State for when player jumps off wall
+    """
+    def __init__(self, parent, flip=False):
+        super().__init__(parent, "jump", flip)
+        self.parent.kinem.accel_y = 0.5
+        self.parent.kinem.vel_y = -10
+        self.parent.kinem.vel_x = 5
+
+    def processInput(self, pressed):
+        if pressed[keys.K_LEFT]:
+            self.parent.kinem.vel_x = -5
+            self.flip = True
+            self.parent.anim.flipHoriz(flip=True)
+        if pressed[keys.K_RIGHT]:
+            self.parent.kinem.vel_x = 5
+            self.flip = False
+            self.parent.anim.flipHoriz(flip=False)
+
+    def update(self):
+        if self.parent.kinem.vel_y == 0:
+            return SecondFallingState(self.parent, self.flip)
