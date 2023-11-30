@@ -244,11 +244,11 @@ class WallJumpState(PlayerState):
         super().__init__(parent, "jump", flip)
         self.parent.kinem.accel_y = 0.5
         self.parent.kinem.vel_y = -10
-        self.parent.kinem.vel_x = 5
+        self.parent.kinem.vel_x = 3
 
     def processInput(self, pressed):
         if pressed[keys.K_LEFT]:
-            self.parent.kinem.vel_x = -5
+            #self.parent.kinem.vel_x = -5
             self.flip = True
             self.parent.anim.flipHoriz(flip=True)
         if pressed[keys.K_RIGHT]:
