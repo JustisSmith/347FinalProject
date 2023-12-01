@@ -67,6 +67,16 @@ class Game:
         """
 
         while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                # Check for key presses in PLAY state
+                if self.game_state == GameState.PLAY and event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.set_game_state(GameState.MENU)
+
             if self.game_state == GameState.MENU:
                 current_menu = main_menu()
                 if current_menu == "PLAY":
@@ -81,11 +91,6 @@ class Game:
                 if current_menu == "MENU":
                     self.set_game_state(GameState.MENU)
             elif self.game_state == GameState.PLAY:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        return
-
                 self.screen.fill("black")
                 self.level.run()
 
@@ -93,7 +98,6 @@ class Game:
                 self.player.update(self.colliders)
                 self.player.render(self.screen)
 
-                #self.collider_ground.render(self.screen)
                 pygame.display.flip()
                 self.clock.tick(60)
 
@@ -101,5 +105,6 @@ if __name__ == "__main__":
     game = Game()
     game.player = actor.Player(0, 0, game)
     game.loop()
-
-
+      
+       
+          
