@@ -22,8 +22,9 @@ class Game:
         self.assets = {                                             # Dictionary of all the assets
             'decor' : load_images('tiles/decor'),
             'grass' : load_images('tiles/grass'),
+            'lava' : load_images('tiles/lava'),
             'large_decor' : load_images('tiles/large_decor'),
-            'stone' : load_images('tiles/stone'),
+            'stone' : load_images('tiles/Stone'),
             'player' : load_image('entities/Slime.png'),
             'background' : load_image('sewer.png'),
             #'clouds' : load_images('clouds'),
@@ -31,7 +32,7 @@ class Game:
             'player/run' : Animation(load_images('entities/player/slime'), img_dur = 4),
             'player/jump' : Animation(load_images('entities/player/slime_jump')),
             #'player/slide' : Animation(load_images('entities/player/slide')),
-            #'player/wall_slide' : Animation(load_images('entities/player/wall_slide')),
+            'player/wall_slide' : Animation(load_images('entities/player/slime')),
             'particle/leaf': Animation(load_images('particles/leaf'), img_dur = 20, loop = False),
             'particle/particle': Animation(load_images('particles/particle'), img_dur = 6, loop = False),
         }

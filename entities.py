@@ -91,7 +91,7 @@ class Player(PhysicsEntity):                                               # Inh
             self.air_time = 0
             self.jumps = 1
         
-        """
+        
         self.wall_slide = False
         if (self.collisions['right'] or self.collisions['left']) and self.air_time > 4:
             self.wall_slide = True
@@ -100,17 +100,17 @@ class Player(PhysicsEntity):                                               # Inh
                 self.flip = False
             else:
                 self.flip = True
-            self.set_action('wall_slide')
+            #self.set_action('wall_slide')
 
         if not self.wall_slide:
             if self.air_time > 4:                                                # Sets the animation to jump if in the air
-                self.set_action('jump')
+                self.set_action('idle')
             elif movement[0] != 0:                                               # If moving in x direction, set the animation to run
                 self.set_action('run')
             else:                                                                # Else the animation is idle
                 self.set_action('idle')
         
-             
+        """     
         if abs(self.dashing) in {60, 50}:
             for i in range(20):
                 angle = random.random() * math.pi * 2
@@ -141,7 +141,7 @@ class Player(PhysicsEntity):                                               # Inh
     #        super().render(surf, offset = offset)
         
     def jump(self):
-        if self.wall_slide:          #self.wall_slide
+        if self.wall_slide:          
             if self.flip and self.last_movement[0] < 0:
                 self.velocity[0] = 3.5
                 self.velocity[1] = -2.5
