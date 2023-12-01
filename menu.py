@@ -56,8 +56,7 @@ def main_menu():
 def options_menu():
     running = True
 
-    difficulty_options = ["Easy", "Medium", "Hard"]  # Define difficulty options
-    selected_difficulty = 0  # Default to the first option
+   
     sound_enabled = True  # Initialize sound option
 
     while running:
@@ -69,16 +68,12 @@ def options_menu():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     return "MENU"  # Indicate that the main menu should be shown
-                if event.key == pygame.K_DOWN:
-                    selected_difficulty = (selected_difficulty + 1) % len(difficulty_options)
-                if event.key == pygame.K_UP:
-                    selected_difficulty = (selected_difficulty - 1) % len(difficulty_options)
+               
                 if event.key == pygame.K_s:
                     sound_enabled = not sound_enabled
 
         screen.fill(BLACK)
         draw_text("Options Menu", menu_title_font, (WHITE), screen_width // 2, screen_height // 4)
-        draw_text("Press (up or down) Difficulty: " + difficulty_options[selected_difficulty], font, (255, 255, 255), screen_width // 2, screen_height // 2)
         draw_text("Press (s) Sound: " + ("On" if sound_enabled else "Off"), font, (255, 255, 255), screen_width // 2, (screen_height // 2) + 50)
         draw_text("Press (q) to go Back to Main Menu", font, (255, 0, 0), screen_width // 2, (screen_height // 2) + 100)
 
@@ -94,4 +89,3 @@ if __name__ == "__main__":
             current_menu = options_menu()
         elif current_menu == "MENU":
             current_menu = main_menu()
-
