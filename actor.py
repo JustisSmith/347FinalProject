@@ -9,7 +9,7 @@ class Kinematics:
     calculations for actors (or anything
     with a rect controlling its position).
     """
-    def __init__(self, parent):
+    def __init__(self, parent ,x , y, rect):
         """
         Initializes parent, velocity, and
         acceleration in 2D. If you want to
@@ -30,16 +30,31 @@ class Kinematics:
         self.accel_x = 0
         self.accel_y = 0
 
-    def updateX(self):
+        self.x = x
+        self.y = y
+        self.rect = rect
+
+    def updateX(self, tilemap, movement):
         """
         Update x velocity based on acceleration,
         update x position in parent based on velocity.
         """
         self.vel_x += self.accel_x
         self.old_x = self.parent.rect.x
-        self.parent.rect.x += self.vel_x       
+        self.parent.rect.x += self.vel_x   
 
-    def updateY(self):
+        
+        frame_movementx = (movement[0] + self.vel_x)
+        self.x += frame_movementx
+
+        for prect in tilemap.physics_rects_around((self.x,self.y)):
+            if self.rect.colliderect(prect):
+                self.revertX()
+        
+
+
+
+    def updateY(self, tilemap, movement):
         """
         Update x velocity based on acceleration,
         update x position in parent based on velocity.
@@ -47,6 +62,16 @@ class Kinematics:
         self.vel_y += self.accel_y 
         self.old_y = self.parent.rect.y
         self.parent.rect.y += self.vel_y
+
+        
+        frame_movementy = (movement[1] + self.vel_y)
+        self.y += frame_movementy
+
+        for rect in tilemap.physics_rects_around((self.x,self.y)):
+            if self.rect.colliderect(rect):
+                self.revertY()
+        
+
 
     def revertX(self):
         """
@@ -78,6 +103,8 @@ class Player(pygame.sprite.Sprite):
         """
         super().__init__()
         self.game = game
+        self.x = x
+        self.y = y
         # scale by 3 because the original sprites are small
         self.anim = Animator("player.png", 5, 1, scale_by=2)
         # animations start at 0 and go until 4, all on the 0th row
@@ -95,7 +122,7 @@ class Player(pygame.sprite.Sprite):
             x, y, self.anim.rect.w, self.anim.rect.h
         )
 
-        self.kinem = Kinematics(self)
+        self.kinem = Kinematics(self, x, y, self.rect)
         self.kinem.accel_y = 0.5  # this is the gravity force right here
         # note that downward y is actually positive! negative y is upward
 
@@ -124,7 +151,8 @@ class Player(pygame.sprite.Sprite):
         """
         self.delgateToState(self.state.processInput, pressed)
 
-    def update(self, colliders):
+    def update(self, colliders, tilemap, movement=(0,0)):
+
         """
         Updates state of the player and performs movement.
         Also checks for collisions and reverts movement
@@ -134,12 +162,13 @@ class Player(pygame.sprite.Sprite):
         """
         self.delgateToState(self.state.update)
 
-        self.kinem.updateX()
+        self.kinem.updateX(tilemap, movement)
         if pygame.sprite.spritecollideany(self, colliders):
             self.kinem.revertX()
-        self.kinem.updateY()
+        self.kinem.updateY(tilemap, movement)
         if pygame.sprite.spritecollideany(self, colliders):
             self.kinem.revertY()
+
 
     def render(self, surf):
         """

@@ -4,7 +4,9 @@ import actor
 from settings import *
 from level1 import Level1
 from enum import Enum
-from menu import main_menu, options_menu  
+from menu import main_menu, options_menu
+from utils import load_image, load_images  
+from tilemap import Tilemap
 
 class GameState(Enum):
     MENU = 0
@@ -20,9 +22,30 @@ class Game:
         @height : sets height of the screen
         """
         pygame.init()
-        self.clock = pygame.time.Clock()
+        pygame.display.set_caption('Final Project')
         self.screen = pygame.display.set_mode((screen_width, screen_height))
-        self.level = Level1(level1_map, self.screen)
+        #self.screen = pygame.display.set_mode((640, 480))
+        self.clock = pygame.time.Clock()
+
+        self.movement = [False,False]
+
+        self.assets = {
+            'background' : load_image('sewerbackground.png'),
+            'grass' : load_images('tiles/grass'),
+            'stone' : load_images('tiles/stone'),
+            'large_decor' : load_images('tiles/large_decor'),
+            'decor' : load_images('tiles/decor'),
+            'lava' : load_images('tiles/lava'),
+        }
+        
+        #print(screen_height)
+        #print(screen_width)
+        #print(self.assets)
+
+        self.tilemap = Tilemap(self, 16)
+        self.tilemap.load('map.json')
+
+        #self.level = Level1(level1_map, self.screen)
 
         # this allows us to filter the event queue
         # for faster event processing
@@ -31,12 +54,13 @@ class Game:
             pygame.KEYDOWN
         ])
 
-        self.player = actor.Player(0, 0)
+        self.player = actor.Player(0, 0, (0,0))
 
         # colliders put right off-screen on both sides in order
         # to keep player from walking off the edge
-        collider_left = actor.Collider(pygame.Rect(-1, 0, 1, screen_height))
-        collider_right = actor.Collider(pygame.Rect(screen_width + 1, 0, 1, screen_height))
+
+        #collider_left = actor.Collider(pygame.Rect(-1, 0, 1, screen_height))
+        #collider_right = actor.Collider(pygame.Rect(screen_width + 1, 0, 1, screen_height))
 
         """
         self.collider_ground = actor.Collider(
@@ -47,11 +71,15 @@ class Game:
         # sprite groups allows us to perform batch
         # collision detection, as seen in Player.update()
 
+        
         self.colliders = pygame.sprite.Group(
-            collider_left, collider_right,
+            #collider_left, collider_right,
             #self.collider_ground,
-            *self.level.get_tiles()
+            #*self.level.get_tiles()
         )
+        
+        
+        self.scroll = [0,0]
 
         # Set initial game state to MENU
         self.game_state = GameState.MENU
@@ -87,10 +115,18 @@ class Game:
                         return
 
                 self.screen.fill("black")
-                self.level.run()
+                self.screen.blit(self.assets['background'], (0,0))
+
+                self.scroll[0] += (self.player.rect.centerx - self.screen.get_width()/2 - self.scroll[0]) / 30
+                self.scroll[1] += (self.player.rect.centerx - self.screen.get_width()/2 - self.scroll[1]) / 30
+                render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+
+                #self.level.run()
+
+                self.tilemap.render(self.screen, offset = render_scroll)
 
                 self.player.processInput(pygame.key.get_pressed())
-                self.player.update(self.colliders)
+                self.player.update(self.colliders, self.tilemap, (self.movement[1] - self.movement[0], 0))
                 self.player.render(self.screen)
 
                 #self.collider_ground.render(self.screen)
