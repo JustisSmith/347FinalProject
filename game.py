@@ -1,6 +1,5 @@
 import pygame
 import actor
-
 from settings import *
 from level1 import Level1
 from enum import Enum
@@ -13,19 +12,11 @@ class GameState(Enum):
 
 class Game:
     def __init__(self):
-        """
-        Start up Pygame and instantiate all
-        relevant actors.
-        @width : sets width of the screen
-        @height : sets height of the screen
-        """
         pygame.init()
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.level = Level1(level1_map, self.screen)
 
-        # this allows us to filter the event queue
-        # for faster event processing
         pygame.event.set_allowed([
             pygame.QUIT,
             pygame.KEYDOWN
@@ -33,46 +24,45 @@ class Game:
 
         self.player = actor.Player(0, 0)
 
-        # colliders put right off-screen on both sides in order
-        # to keep player from walking off the edge
         collider_left = actor.Collider(pygame.Rect(-1, 0, 1, screen_height))
         collider_right = actor.Collider(pygame.Rect(screen_width + 1, 0, 1, screen_height))
 
-        """
-        self.collider_ground = actor.Collider(
-            pygame.Rect(0, screen_height-40, screen_width, 40), color="chartreuse4"
-        )
-        """
-        
-        # sprite groups allows us to perform batch
-        # collision detection, as seen in Player.update()
-
         self.colliders = pygame.sprite.Group(
             collider_left, collider_right,
-            #self.collider_ground,
             *self.level.get_tiles()
         )
 
-        # Set initial game state to MENU
         self.game_state = GameState.MENU
+
+        # New attribute for the timer
+        self.timer = 0
+        self.timer_font = pygame.font.Font(None, 36)
 
     def set_game_state(self, new_state):
         self.game_state = new_state
+    
+    #incrementes the timer 
+    def update_timer(self, dt):
+        if self.game_state == GameState.PLAY:
+            self.timer += dt
+
+    # method that depicts the timer in the top right corner 
+    def draw_timer(self):
+        if self.game_state == GameState.PLAY:
+            timer_text = self.timer_font.render(f"Time: {int(self.timer)} seconds", True, (255, 255, 255))
+            timer_rect = timer_text.get_rect()
+            timer_rect.topleft = (screen_width - timer_rect.width - 10, 10)
+            self.screen.blit(timer_text, timer_rect.topleft)
 
     def loop(self):
-        """
-        Primary game loop. This should be
-        run perpetually until the game is
-        over or is closed.
-        """
-
         while True:
+            dt = self.clock.tick(60) / 1000.0
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
 
-                # Check for key presses in PLAY state
                 if self.game_state == GameState.PLAY and event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.set_game_state(GameState.MENU)
@@ -98,8 +88,10 @@ class Game:
                 self.player.update(self.colliders)
                 self.player.render(self.screen)
 
+                self.update_timer(dt)
+                self.draw_timer()
+
                 pygame.display.flip()
-                self.clock.tick(60)
 
 if __name__ == "__main__":
     game = Game()
