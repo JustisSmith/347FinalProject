@@ -150,19 +150,8 @@ class FirstFallingState(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
-        
-        player_rect = self.parent.rect.inflate(5, 0)
-
-        for wall in self.parent.game.colliders:
-            wall_rect = wall.rect
-            if player_rect.colliderect(wall.rect):
-                if self.parent.rect.midleft[0] > wall_rect.midleft[0]:
-                    return WallSlideState(self.parent, self.flip)
-                elif player_rect.left < wall_rect.right and player_rect.right > wall_rect.right:
-                    pass
-                
-        #if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-        #    return WallSlideState(self.parent, self.flip)      
+        if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+            return WallSlideState(self.parent, self.flip)      
         
 class WallSlideState(PlayerState):
     """
@@ -187,8 +176,6 @@ class WallSlideState(PlayerState):
             self.parent.anim.flipHoriz(flip=False)
 
     def update(self):
-        #if not pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-            #self.slide = True
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
         
@@ -200,7 +187,16 @@ class WallJumpState(PlayerState):
         super().__init__(parent, "jump", flip)
         self.parent.kinem.accel_y = 0.5
         self.parent.kinem.vel_y = -12
-        self.parent.kinem.vel_x = 8
+
+        player_rect = self.parent.rect.inflate(5, 0)
+
+        for wall in self.parent.game.colliders:
+            wall_rect = wall.rect
+            if player_rect.colliderect(wall.rect):
+                if self.parent.rect.midleft > wall_rect.midleft:
+                    self.parent.kinem.vel_x = 8
+                elif self.parent.rect.midleft < wall_rect.midleft:
+                    self.parent.kinem.vel_x = -8
 
     def processInput(self, pressed):
         if pressed[keys.K_LEFT]:
@@ -208,7 +204,7 @@ class WallJumpState(PlayerState):
             self.flip = True
             self.parent.anim.flipHoriz(flip=True)
         if pressed[keys.K_RIGHT]:
-            self.parent.kinem.vel_x = 5
+            #self.parent.kinem.vel_x = 5
             self.flip = False
             self.parent.anim.flipHoriz(flip=False)
 
