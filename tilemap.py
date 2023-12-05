@@ -2,7 +2,7 @@ import pygame
 import json
 
 NEIGHBOR_OFFSETS = [(-1,0), (-1,-1), (0,-1), (1,-1), (1,0), (0,0), (-1,1), (0,1), (1,1)]            # All Permutations of 1, -1, and 0
-PHYSICS_TILES = {'grass', 'stone', 'lava'}                                                                  # Tile type that we want to collide with
+PHYSICS_TILES = {'lava'}                                                                  # Tile type that we want to collide with
 
 class Tilemap:
     def __init__(self, game, tile_size=16):

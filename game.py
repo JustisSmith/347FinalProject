@@ -54,7 +54,7 @@ class Game:
             pygame.KEYDOWN
         ])
 
-        self.player = actor.Player(0, 0, (0,0))
+        self.player = actor.Player(0, 0, game = self)
 
         # colliders put right off-screen on both sides in order
         # to keep player from walking off the edge
@@ -117,8 +117,8 @@ class Game:
                 self.screen.fill("black")
                 self.screen.blit(self.assets['background'], (0,0))
 
-                self.scroll[0] += (self.player.rect.centerx - self.screen.get_width()/2 - self.scroll[0]) / 30
-                self.scroll[1] += (self.player.rect.centerx - self.screen.get_width()/2 - self.scroll[1]) / 30
+                #self.scroll[0] += (self.player.rect.centerx - self.screen.get_width()/2 - self.scroll[0]) / 30
+                #self.scroll[1] += (self.player.rect.centery - self.screen.get_width()/2 - self.scroll[1]) / 30
                 render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
                 #self.level.run()
@@ -126,7 +126,7 @@ class Game:
                 self.tilemap.render(self.screen, offset = render_scroll)
 
                 self.player.processInput(pygame.key.get_pressed())
-                self.player.update(self.colliders, self.tilemap, (self.movement[1] - self.movement[0], 0))
+                self.player.update(self.colliders, self.tilemap, (self.movement[0] - self.movement[1], 0))
                 self.player.render(self.screen)
 
                 #self.collider_ground.render(self.screen)
