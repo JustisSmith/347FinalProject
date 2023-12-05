@@ -192,10 +192,10 @@ class WallJumpState(PlayerState):
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
-            if player_rect.colliderect(wall.rect):
-                if self.parent.rect.midleft > wall_rect.midleft:
+            if player_rect.colliderect(wall_rect):
+                if self.parent.rect.left > wall_rect.left:
                     self.parent.kinem.vel_x = 8
-                elif self.parent.rect.midleft < wall_rect.midleft:
+                elif self.parent.rect.left < wall_rect.left:
                     self.parent.kinem.vel_x = -8
 
     def processInput(self, pressed):
