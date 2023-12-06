@@ -1,7 +1,9 @@
+# Imports the necessary libraries
 import pygame
 import sys
 from settings import screen_width, screen_height
 
+# Initialize the Pygame library
 pygame.init()
 
 # Create a window
@@ -10,24 +12,30 @@ pygame.display.set_caption("Main Menu")
 
 # Load background image
 background_image = pygame.image.load("menu_background.png")
-background_image = pygame.transform.scale(background_image, (screen_width, screen_height))  # Scale the image to fit the screen
+background_image = pygame.transform.scale(background_image, (screen_width, screen_height))  # Scales the image to fit the screen
 
-# Constants
+# Defined color constants 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-# Fonts
+# Define fonts
 menu_title_font = pygame.font.Font(None, 72)
 font = pygame.font.Font(None, 36)
 
+# variable for sound state
+sound_enabled = True
+
+# Function to draw text on the screen
 def draw_text(text, font, color, x, y):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
     text_rect.center = (x, y)
     screen.blit(text_surface, text_rect)
 
+# Function for the main menu
 def main_menu():
     running = True
+    global sound_enabled
 
     while running:
         for event in pygame.event.get():
@@ -48,6 +56,7 @@ def main_menu():
         # Blit the background image
         screen.blit(background_image, (0, 0))
 
+        # Display main menu text
         draw_text("Game Title", menu_title_font, (0, 255, 255), screen_width // 2, screen_height // 4)
         draw_text("Main Menu", font, (255, 255, 255), screen_width // 2, screen_height // 2.5)
         
@@ -57,9 +66,10 @@ def main_menu():
 
         pygame.display.flip()
 
+# Function for the options menu
 def options_menu():
     running = True
-    sound_enabled = True
+    global sound_enabled
 
     while running:
         for event in pygame.event.get():
@@ -76,14 +86,19 @@ def options_menu():
         # Blit the background image
         screen.blit(background_image, (0, 0))
 
+        # Displays the options menu text
         draw_text("Options Menu", menu_title_font, (WHITE), screen_width // 2, screen_height // 4)
         draw_text("Press (s) Sound: " + ("On" if sound_enabled else "Off"), font, (255, 255, 255), screen_width // 2, (screen_height // 2) + 50)
         draw_text("Press (q) to go Back to Main Menu", font, (255, 0, 0), screen_width // 2, (screen_height // 2) + 100)
 
         pygame.display.flip()
 
+
 if __name__ == "__main__":
+    # Starts with the main menu
     current_menu = main_menu()
+    
+    # Loop to navigate between menus
     while True:
         if current_menu == "PLAY":
             print("Starting the game...")
@@ -92,3 +107,4 @@ if __name__ == "__main__":
             current_menu = options_menu()
         elif current_menu == "MENU":
             current_menu = main_menu()
+
