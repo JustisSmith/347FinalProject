@@ -82,17 +82,49 @@ def options_menu():
                     return "MENU"
                 if event.key == pygame.K_s:
                     sound_enabled = not sound_enabled
+                if event.key == pygame.K_c:
+                    controls_menu()
 
         # Blit the background image
         screen.blit(background_image, (0, 0))
 
         # Displays the options menu text
         draw_text("Options Menu", menu_title_font, (WHITE), screen_width // 2, screen_height // 4)
-        draw_text("Press (s) Sound: " + ("On" if sound_enabled else "Off"), font, (255, 255, 255), screen_width // 2, (screen_height // 2) + 50)
-        draw_text("Press (q) to go Back to Main Menu", font, (255, 0, 0), screen_width // 2, (screen_height // 2) + 100)
+        draw_text("Press (s) Sound: " + ("On" if sound_enabled else "Off"), font, (255, 255, 255), screen_width // 2, (screen_height // 3) + 50)
+        draw_text("Press (c) for Controls", font, (255, 255, 255), screen_width // 2, (screen_height // 3) + 100)
+        draw_text("Press (q) to go Back to Main Menu", font, (255, 0, 0), screen_width // 2, (screen_height // 2) + 150)
 
         pygame.display.flip()
 
+# New function for the controls menu
+def controls_menu():
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    return
+
+        # Blit the background image
+        screen.blit(background_image, (0, 0))
+
+        # Displays the controls menu text
+        draw_text("Controls ", menu_title_font, (WHITE), screen_width // 2, screen_height // 4)
+        # Add additional controls information here
+        draw_text("Movement: use the ARROW keys to move from left to right  ", font, (255,255, 0), screen_width // 2, (screen_height // 3) + 25)
+        draw_text("Jump: use the SPACE key to jump  ", font, (255,255,0), screen_width // 2, (screen_height // 3) + 75)
+        draw_text("Wall slide: approach a wall and jump to begin sliding ", font, (255,255,0), screen_width // 2, (screen_height // 3) + 125)
+
+        draw_text("Press (q) to go Back to Options Menu", font, (255, 0, 0), screen_width // 2, (screen_height // 2) + 150)
+
+        
+
+        pygame.display.flip()
 
 if __name__ == "__main__":
     # Starts with the main menu
