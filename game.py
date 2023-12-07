@@ -49,10 +49,16 @@ class Game:
     # method that depicts the timer in the top right corner 
     def draw_timer(self):
         if self.game_state == GameState.PLAY:
-            timer_text = self.timer_font.render(f"Time: {int(self.timer)} seconds", True, (255, 255, 255))
+            timer_text = self.timer_font.render(f"Time: {int(self.timer)} Sec", True, (255, 255, 255))
             timer_rect = timer_text.get_rect()
             timer_rect.topleft = (screen_width - timer_rect.width - 10, 10)
             self.screen.blit(timer_text, timer_rect.topleft)
+
+            # depicts the escape key message
+            escape_text = self.timer_font.render("Esc key for menu", True, (255, 255, 0))
+            escape_rect = escape_text.get_rect()
+            escape_rect.topleft = (screen_width - escape_rect.width - 10, timer_rect.bottom + 5)
+            self.screen.blit(escape_text, escape_rect.topleft)
 
     def loop(self):
         while True:
