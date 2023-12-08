@@ -19,6 +19,7 @@ class PlayerState:
         self.parent = parent
         self.flip = flip
         self.jump = jump
+        #print(self.__class__, self.jump)               #debug : prints class
         if anim:
             self.parent.anim.change(anim)
         self.parent.anim.flipHoriz(flip)
@@ -67,7 +68,13 @@ class StandingState(PlayerState):
         if pressed[keys.K_RIGHT]:
             return RunningState(self.parent, flip=False)
         if pressed[keys.K_SPACE] and self.jump == True:
-            return FirstJumpState(self.parent, self.flip)      
+            return FirstJumpState(self.parent, self.flip) 
+
+    def update(self):
+        if self.parent.kinem.vel_y > 0:
+            return FirstFallingState(self.parent, self.flip) 
+
+        
     
 class RunningState(PlayerState):
     """
@@ -97,6 +104,10 @@ class RunningState(PlayerState):
             return StandingState(self.parent, self.flip)
         if not self.flip and not pressed[keys.K_RIGHT]:
             return StandingState(self.parent, self.flip)
+        
+    def update(self):
+        if self.parent.kinem.vel_y > 0:
+            return FirstFallingState(self.parent, self.flip)
 
 class FirstJumpState(PlayerState):
     """
@@ -141,25 +152,71 @@ class FirstFallingState(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
-        if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-            return WallSlideState(self.parent, self.flip)      
-        
-class WallSlideState(PlayerState):
-    """
-    State for when player is sliding on wall
-    """
-    def __init__(self, parent, flip=False, jump=False):
-        super().__init__(parent, "stand", flip, jump)
-        self.parent.kinem.accel_y = 0.01
+        #if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+        #    return WallSlideState(self.parent, self.flip)
 
-    def processInput(self, pressed):
-        player_rect = self.parent.rect.inflate(5, 0)
+        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
             if player_rect.colliderect(wall_rect):
+                if self.parent.rect.left > wall_rect.left or self.parent.rect.left < wall_rect.left:    #if collide with wall to right or left
+                    return WallSlideState(self.parent, self.flip)        
+        
+class WallSlideState(PlayerState):
+    """
+    State for when player sticks to wall
+    """
+    def __init__(self, parent, flip=False, jump=False):
+        super().__init__(parent, "stand", flip, jump)
+        self.parent.kinem.accel_y = 0
+        self.parent.kinem.vel_y = 0
+
+    def processInput(self, pressed): 
+
+        for wall in self.parent.game.colliders:
+            wall_rect = wall.rect
+            player_rect = self.parent.rect.inflate(20, 0)
+            if player_rect.colliderect(wall_rect):
                 if not pressed[keys.K_SPACE]:
                     self.jump = True
+                #print(self.jump)
+                if pressed[keys.K_SPACE] and self.jump == True:
+                    return WallJumpState(self.parent, self.flip)
+                if pressed[keys.K_LEFT]:
+                    #self.parent.kinem.accel_y = 0.5
+                    self.parent.kinem.vel_x = -5
+                    self.flip = True
+                    self.parent.anim.flipHoriz(flip=True)
+                if pressed[keys.K_RIGHT]:
+                    #self.parent.kinem.accel_y = 0.5
+                    self.parent.kinem.vel_x = 5
+                    self.flip = False
+                    self.parent.anim.flipHoriz(flip=False)
+
+    def update(self):
+        if self.parent.kinem.vel_y == 0:
+            return WallSlideState2(self.parent, self.flip)
+        if not pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+            return WallFallingState(self.parent, self.flip)
+        
+class WallSlideState2(PlayerState):
+    """
+    State for when player is actually sliding down wall
+    """
+    def __init__(self, parent, flip=False, jump=False):
+        super().__init__(parent, "stand", flip, jump)
+        self.parent.kinem.accel_y = 0.05
+
+    def processInput(self, pressed): 
+
+        for wall in self.parent.game.colliders:
+            wall_rect = wall.rect
+            player_rect = self.parent.rect.inflate(20, 0)
+            if player_rect.colliderect(wall_rect):
+                if not pressed[keys.K_SPACE]:
+                    self.jump = True
+                #print(self.jump)
                 if pressed[keys.K_SPACE] and self.jump == True:
                     return WallJumpState(self.parent, self.flip)
                 if pressed[keys.K_LEFT]:
@@ -178,7 +235,7 @@ class WallSlideState(PlayerState):
             return StandingState(self.parent, self.flip)
         if not pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
             return WallFallingState(self.parent, self.flip)
-        
+
 class WallJumpState(PlayerState):
     """
     State that launches player off wall after jump, player can not move
@@ -188,15 +245,19 @@ class WallJumpState(PlayerState):
         self.parent.kinem.accel_y = 0.5
         self.parent.kinem.vel_y = -12
 
-        player_rect = self.parent.rect.inflate(5, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
             if player_rect.colliderect(wall_rect):
                 if self.parent.rect.left > wall_rect.left:      #jumped off wall to left
-                    self.parent.kinem.vel_x = 8         
+                    self.parent.kinem.vel_x = 6
+                    self.flip = False
+                    self.parent.anim.flipHoriz(flip=False)         
                 elif self.parent.rect.left < wall_rect.left:    #jumped off wall to right
-                    self.parent.kinem.vel_x = -8                
+                    self.parent.kinem.vel_x = -6
+                    self.flip = True
+                    self.parent.anim.flipHoriz(flip=True)                
 
     def processInput(self, pressed):
         if pressed[keys.K_LEFT]:
@@ -232,8 +293,16 @@ class WallJumpState2(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return WallFallingState(self.parent, self.flip)
-        if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-            return WallSlideState(self.parent, self.flip)
+        #if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+        #    return WallSlideState(self.parent, self.flip)
+        
+        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+
+        for wall in self.parent.game.colliders:
+            wall_rect = wall.rect
+            if player_rect.colliderect(wall_rect):
+                if self.parent.rect.left > wall_rect.left or self.parent.rect.left < wall_rect.left:    #if collide with wall to right or left
+                    return WallSlideState(self.parent, self.flip)  
         
 class WallFallingState(PlayerState):
     """        
@@ -256,5 +325,13 @@ class WallFallingState(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
-        if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-            return WallSlideState(self.parent, self.flip)
+        #if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
+        #    return WallSlideState(self.parent, self.flip)
+
+        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+
+        for wall in self.parent.game.colliders:
+            wall_rect = wall.rect
+            if player_rect.colliderect(wall_rect):
+                if self.parent.rect.left > wall_rect.left or self.parent.rect.left < wall_rect.left:    #if collide with wall to right or left
+                    return WallSlideState(self.parent, self.flip)  
