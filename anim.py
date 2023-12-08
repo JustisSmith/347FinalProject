@@ -15,7 +15,7 @@ class Animator:
         self.surf = pygame.image.load(filepath).convert()
         # this line is to set up transparencies properly
         # RLEACCEL is some acceleration flag for software rendering
-        self.surf.set_colorkey((255, 255, 255), pygame.RLEACCEL)
+        self.surf.set_colorkey((0, 0, 0), pygame.RLEACCEL)
         self.horiz_cnt = horiz_cnt
         self.vert_cnt = vert_cnt
         if scale_by:
@@ -23,7 +23,7 @@ class Animator:
 
         full_size = self.surf.get_rect()
         self.rect = pygame.Rect(
-            0, 0, full_size.w / horiz_cnt, full_size.h / vert_cnt
+            0, 0, full_size.w / horiz_cnt, full_size.h / vert_cnt                                      #0, 0, full_size.w / horiz_cnt, full_size.h / vert_cnt
         )
         # this rect is set up such that it represents a single frame
         # of animation. this rect will get moved around between
@@ -83,5 +83,5 @@ class Animator:
         # so recalculate the position of the frame 
         # from the opposite side
         x_mul = self.horiz_cnt - 1 - x if self.flip_x else x
-        self.rect.x = self.rect.w * x_mul
-        self.rect.y = self.rect.h * y
+        self.rect.x = 25-1 * x_mul #self.rect.w * x_mul
+        self.rect.y = 25 #self.rect.h * y

@@ -7,6 +7,7 @@ from enum import Enum
 from menu import main_menu, options_menu
 from utils import load_image, load_images  
 from tilemap import Tilemap
+from anim import Animator
 
 class GameState(Enum):
     MENU = 0
@@ -24,6 +25,8 @@ class Game:
         pygame.init()
         pygame.display.set_caption('Final Project')
         self.screen = pygame.display.set_mode((screen_width, screen_height))
+        #print(screen_height)
+        #print(screen_width)
         #self.screen = pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
 
@@ -36,6 +39,7 @@ class Game:
             'large_decor' : load_images('tiles/large_decor'),
             'decor' : load_images('tiles/decor'),
             'lava' : load_images('tiles/lava'),
+            'traps' : load_images('traps'),
         }
         
         #print(screen_height)
@@ -54,7 +58,7 @@ class Game:
             pygame.KEYDOWN
         ])
 
-        self.player = actor.Player(0, 0, game = self)
+        self.player = actor.Player(0, -30, game = self)
 
         # colliders put right off-screen on both sides in order
         # to keep player from walking off the edge
@@ -80,6 +84,7 @@ class Game:
         
         
         self.scroll = [0,0]
+        #self.camera = pygame.Rect(0,0, screen_width, screen_height)
 
         # Set initial game state to MENU
         self.game_state = GameState.MENU
@@ -113,6 +118,8 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+                    
+                #self.camera.center = self.player.rect.center
 
                 self.screen.fill("black")
                 self.screen.blit(self.assets['background'], (0,0))
@@ -129,6 +136,8 @@ class Game:
                 self.player.update(self.colliders, self.tilemap, (self.movement[0] - self.movement[1], 0))
                 self.player.render(self.screen)
 
+                pygame.draw.rect(self.screen, (0,255,0), (0,544,16,1))
+                pygame.draw.rect(self.screen, (0,0,255), (0,572,16,1))
                 #self.collider_ground.render(self.screen)
                 pygame.display.flip()
                 self.clock.tick(60)

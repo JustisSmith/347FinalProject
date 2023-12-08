@@ -1,6 +1,6 @@
 import pygame
 import sys
-from utils import load_images
+from utils import load_images, load_image
 from tilemap import Tilemap
 
 RENDER_SCALE = 2.0
@@ -9,8 +9,8 @@ class Editor:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Editor')
-        self.screen = pygame.display.set_mode((640, 480))
-        self.display = pygame.Surface((320,240))                   # Creates a smaller display for the small player to make it look bigger
+        self.screen = pygame.display.set_mode((1600, 704))
+        #self.display = pygame.Surface((320,240))                   # Creates a smaller display for the small player to make it look bigger
 
         self.clock = pygame.time.Clock()
 
@@ -20,6 +20,7 @@ class Editor:
             'large_decor' : load_images('tiles/large_decor'),
             'stone' : load_images('tiles/Stone'),
             'lava' : load_images('tiles/lava'),
+            'traps' : load_images('traps'),
            
         }
 
@@ -47,13 +48,13 @@ class Editor:
     def run(self):
 
         while True:
-            self.display.fill((0,0,0))
+            self.screen.fill((0,0,0))
 
             self.scroll[0] += (self.movement[1] - self.movement[0]) * 2
             self.scroll[1] += (self.movement[3] - self.movement[2]) * 2
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
-            self.tilemap.render(self.display, offset=render_scroll)
+            self.tilemap.render(self.screen, offset=render_scroll)
 
             current_tile_img = self.assets[self.tile_list[self.tile_group]][self.tile_variant].copy()
             current_tile_img.set_alpha(100)
@@ -63,9 +64,9 @@ class Editor:
             tile_pos = (int((mpos[0] + self.scroll[0]) // self.tilemap.tile_size), int((mpos[1] + self.scroll[1]) // self.tilemap.tile_size))
 
             if self.ongrid:
-                self.display.blit(current_tile_img, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
+                self.screen.blit(current_tile_img, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
             else:
-                self.display.blit(current_tile_img, mpos)
+                self.screen.blit(current_tile_img, mpos)
 
             if self.clicking and self.ongrid:                            # Places Tiles                                          
                 self.tilemap.tilemap[str(tile_pos[0]) + ';' + str(tile_pos[1])] = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile_pos}
@@ -79,7 +80,7 @@ class Editor:
                     if tile_r.collidepoint(mpos):
                         self.tilemap.offgrid_tiles.remove(tile)
 
-            self.display.blit(current_tile_img, (5,5))
+            self.screen.blit(current_tile_img, (5,5))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -139,7 +140,7 @@ class Editor:
                     if event.key == pygame.K_LSHIFT:
                         self.shift = False
 
-            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0,0))       # makes the screen the size of the display so that it is zoomed in
+            self.screen.blit(pygame.transform.scale(self.screen, self.screen.get_size()), (0,0))       # makes the screen the size of the display so that it is zoomed in
             pygame.display.update()
             self.clock.tick(60)
 

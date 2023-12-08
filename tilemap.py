@@ -2,7 +2,7 @@ import pygame
 import json
 
 NEIGHBOR_OFFSETS = [(-1,0), (-1,-1), (0,-1), (1,-1), (1,0), (0,0), (-1,1), (0,1), (1,1)]            # All Permutations of 1, -1, and 0
-PHYSICS_TILES = {'lava'}                                                                  # Tile type that we want to collide with
+PHYSICS_TILES = {'lava','traps'}                                                                  # Tile type that we want to collide with
 
 class Tilemap:
     def __init__(self, game, tile_size=16):
@@ -59,6 +59,7 @@ class Tilemap:
         for tile in self.tiles_around(pos):
             if tile['type'] in PHYSICS_TILES:
                 rects.append(pygame.Rect(tile['pos'][0] * self.tile_size, tile['pos'][1] * self.tile_size, self.tile_size, self.tile_size))
+        print(rects)
         return rects 
 
     def render(self,surf, offset=(0,0)):
@@ -73,6 +74,7 @@ class Tilemap:
                 if loc in self.tilemap:
                     tile = self.tilemap[loc]
                     surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))   # puts a tile on the dispay
+                    pygame.draw.rect(surf, (255,0,0), (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1], self.tile_size, self.tile_size), width=2)
 
         
         

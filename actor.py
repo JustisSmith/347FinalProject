@@ -37,7 +37,6 @@ class Kinematics:
         self.old_x = x
         self.old_y = y
 
-
         #self.last_revert_time = 0
 
     def updateX(self, tilemap, movement):
@@ -47,12 +46,13 @@ class Kinematics:
         """
         self.vel_x += self.accel_x
         self.old_x = self.parent.rect.x
-        self.parent.rect.x += self.vel_x  
+        self.parent.rect.x = self.parent.rect.x + self.vel_x 
 
         self.x += self.vel_x 
-
+        
         for rect in tilemap.physics_rects_around((self.x, self.y)):
             if self.rect.colliderect(rect):
+                #print("Variant: " + rect['type'] + "\n")
                 if self.vel_x > 0:
                     correction = rect.left - self.rect.right
                 else:
@@ -62,6 +62,8 @@ class Kinematics:
                 self.x += correction
                 self.vel_x = 0
                 return
+        #self.x += self.vel_x
+
 
         """
         frame_movementx = (movement[0] + self.vel_x)
@@ -83,24 +85,28 @@ class Kinematics:
         """
         self.vel_y += self.accel_y 
         self.old_y = self.parent.rect.y
-        self.parent.rect.y += self.vel_y
+        self.parent.rect.y = self.parent.rect.y + self.vel_y
 
         self.y += self.vel_y
+        print(f"{self.parent.rect.bottom=}")
         #player_rect = self.parent.rect.copy()
         #player_rect.y += 1
-        for rect in tilemap.physics_rects_around((self.x,self.y)):
+        for rect in tilemap.physics_rects_around((self.x,self.parent.rect.bottom)):
             if self.rect.colliderect(rect):
+                print(f"{rect.top=}, {self.vel_y=}")
                 if self.vel_y > 0:
                     correction = rect.top - self.rect.bottom
                 else:
                     correction = rect.bottom - self.rect.top
+                print(correction)
                 self.parent.rect.y += correction
                 self.y += correction
                 self.vel_y = 0
                 #self.parent.rect.y = int(self.parent.rect.y / tilemap.tile_size) * tilemap.tile_size
                 #self.y = self.parent.rect.y
                 return
-        self.y += self.vel_y
+        #self.y += self.vel_y
+
 
         """
         frame_movementy = (movement[1] + self.vel_y)
@@ -167,7 +173,7 @@ class Player(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         # scale by 3 because the original sprites are small
-        self.anim = Animator('player.png', 5, 1, scale_by = 2)
+        self.anim = Animator('slimesprite.png', 5, 1, scale_by = 1)
 
         #scaled_image = pygame.transform.scale(self.anim.surf, (self.anim.rect.w // 2, self.anim.rect.h // 2))
         #self.rect = scaled_image.get_rect(topleft=(x, y))
@@ -185,7 +191,7 @@ class Player(pygame.sprite.Sprite):
         self.anim.registerAnim("fall", (4, 0))
 
         self.rect = pygame.Rect(
-            x, y, self.anim.rect.w, self.anim.rect.h
+            x, y, 16, 16     #x, y, self.anim.rect.w, self.anim.rect.h
         )
 
         self.kinem = Kinematics(self, x, y, self.rect)
@@ -228,22 +234,23 @@ class Player(pygame.sprite.Sprite):
         """
         self.delgateToState(self.state.update)
 
-        old_x = self.rect.x
-        old_y = self.rect.y
-
         self.kinem.updateX(tilemap, movement)
 
-        collisions_x = pygame.sprite.spritecollide(self, colliders, False)
-        if collisions_x:
-            self.kinem.revertX()
+        #collisions_x = pygame.sprite.spritecollide(self, colliders, False)
+        
+        #if collisions_x:
+            #self.kinem.revertX()
+            #self.rect.x = self.kinem.rect.x
 
         #if pygame.sprite.spritecollideany(self, colliders):
             #self.kinem.revertX()
         self.kinem.updateY(tilemap, movement)
 
-        collisions_y = pygame.sprite.spritecollide(self, colliders, False)
-        if collisions_y:
-            self.kinem.revertY()
+        #collisions_y = pygame.sprite.spritecollide(self, colliders, False)
+        
+        #if collisions_y:
+            #self.kinem.revertY()
+            #self.rect.y = self.kinem.rect.y
         
 
         #if pygame.sprite.spritecollideany(self, colliders):
@@ -251,10 +258,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.x = self.kinem.x
         self.rect.y = self.kinem.y
-
-        if collisions_x or collisions_y:
-            self.rect.x = old_x
-            self.rect.y = old_y
+        
 
 
     def render(self, surf):
@@ -266,6 +270,7 @@ class Player(pygame.sprite.Sprite):
         surf.blit(
             self.anim.surf, self.rect, area=self.anim.rect
         )
+        pygame.draw.rect(surf, (255,0,0), self.rect, width=2)
         self.anim.next()
 
 class Collider(pygame.sprite.Sprite):
