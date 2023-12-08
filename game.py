@@ -99,7 +99,7 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
-    game.player = actor.Player(0, 0, game)
+    game.player = actor.Player(100, 500, game)
     game.loop()
 
 
