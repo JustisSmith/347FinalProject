@@ -150,6 +150,9 @@ class Player(pygame.sprite.Sprite):
         surf.blit(
             self.anim.surf, self.rect, area=self.anim.rect
         )
+#        pygame.draw.rect(                                                   #debug : shows inflated hitbox for wall jump
+#            surf, (255, 0, 0), self.rect.inflate(20, 0), width=2
+#        )
         self.anim.next()
 
 class Collider(pygame.sprite.Sprite):
