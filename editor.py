@@ -9,7 +9,7 @@ class Editor:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Editor')
-        self.screen = pygame.display.set_mode((1600, 704))
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         #self.display = pygame.Surface((320,240))                   # Creates a smaller display for the small player to make it look bigger
         self.clock = pygame.time.Clock()
 

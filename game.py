@@ -24,7 +24,7 @@ class Game:
         """
         pygame.init()
         pygame.display.set_caption('Final Project')
-        self.screen = pygame.display.set_mode((screen_width, screen_height))
+        self.screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)     #makes window fullscreen
         #print(screen_height)
         #print(screen_width)
         #self.screen = pygame.display.set_mode((640, 480))
