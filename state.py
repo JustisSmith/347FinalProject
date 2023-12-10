@@ -19,7 +19,7 @@ class PlayerState:
         self.parent = parent
         self.flip = flip
         self.jump = jump
-        print(self.__class__, self.jump)               #debug : prints class
+        #print(self.__class__, self.jump)               #debug : prints class
         if anim:
             self.parent.anim.change(anim)
         self.parent.anim.flipHoriz(flip)
@@ -165,7 +165,7 @@ class WallSlideState(PlayerState):
     State for when player sticks to wall
     """
     def __init__(self, parent, flip=False, jump=False):
-        super().__init__(parent, "stand", flip, jump)
+        super().__init__(parent, "slide", flip, jump)
         self.parent.kinem.accel_y = 0
         self.parent.kinem.vel_y = 0
 
@@ -202,7 +202,7 @@ class WallSlideState2(PlayerState):
     State for when player is actually sliding down wall
     """
     def __init__(self, parent, flip=False, jump=False):
-        super().__init__(parent, "stand", flip, jump)
+        super().__init__(parent, "slide", flip, jump)
         self.parent.kinem.accel_y = 0.05
 
     def processInput(self, pressed): 
@@ -290,8 +290,6 @@ class WallJumpState2(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return WallFallingState(self.parent, self.flip)
-        #if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-        #    return WallSlideState(self.parent, self.flip)
         
         player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
 
@@ -322,8 +320,6 @@ class WallFallingState(PlayerState):
     def update(self):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
-        #if pygame.sprite.spritecollideany(self.parent, self.parent.game.colliders, collided=pygame.sprite.collide_rect_ratio(1.2)):
-        #    return WallSlideState(self.parent, self.flip)
 
         player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
 
