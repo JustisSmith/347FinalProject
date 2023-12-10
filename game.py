@@ -120,6 +120,10 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+
+                    if self.game_state == GameState.PLAY and event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.set_game_state(GameState.MENU)
                     
                 #self.camera.center = self.player.rect.center
 
