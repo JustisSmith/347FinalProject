@@ -74,8 +74,8 @@ class Kinematics:
                             self.map_level = f'map{self.level}.json'
                             #print(self.map_level)
                             tilemap.load(self.map_level)
-                            self.x = 0
-                            self.y = 0
+                            self.x = 50
+                            self.y = 600
                 return
         #self.x += self.vel_x
 
@@ -107,7 +107,12 @@ class Kinematics:
         #print(f"{self.parent.rect.bottom=}")
         #player_rect = self.parent.rect.copy()
         #player_rect.y += 1
-        for rect in tilemap.physics_rects_around((self.x,self.parent.rect.bottom)):
+
+        for rect in tilemap.physics_rects_around((self.x,self.parent.rect.bottom)):     #adds grass and stone blocks to colliders for wall jump
+            for tile in tilemap.tiles_around(pos):
+                if((tile['type'] == 'grass') or (tile['type'] == 'stone')):
+                    self.parent.game.colliders.add(Collider(rect))
+
             if self.rect.colliderect(rect):
                 #print(f"{rect.top=}, {self.vel_y=}")
                 if self.vel_y > 0:
@@ -121,8 +126,8 @@ class Kinematics:
 
                 for tile in tilemap.tiles_around(pos):
                     if((tile['type'] == 'lava') or (tile['type'] == 'traps')):
-                        self.x = 0
-                        self.y = 0
+                        self.x = 50
+                        self.y = 600
                 #self.parent.rect.y = int(self.parent.rect.y / tilemap.tile_size) * tilemap.tile_size
                 #self.y = self.parent.rect.y
                 return
@@ -212,6 +217,7 @@ class Player(pygame.sprite.Sprite):
         self.anim.registerAnim("run", *run_frames)
         self.anim.registerAnim("jump", (3, 0))
         self.anim.registerAnim("fall", (4, 0))
+        self.anim.registerAnim("slide", (2, 0))
 
         self.rect = pygame.Rect(
             x, y, 16, 16     #x, y, self.anim.rect.w, self.anim.rect.h
@@ -293,7 +299,7 @@ class Player(pygame.sprite.Sprite):
         surf.blit(
             self.anim.surf, self.rect, area=self.anim.rect
         )
-        pygame.draw.rect(surf, (255,0,0), self.rect, width=2)
+        #pygame.draw.rect(surf, (255,0,0), self.rect, width=2)      #debug: shows player hitbox
         self.anim.next()
 
 class Collider(pygame.sprite.Sprite):
