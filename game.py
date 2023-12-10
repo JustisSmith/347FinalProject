@@ -68,15 +68,6 @@ class Game:
         collider_left = actor.Collider(pygame.Rect(-1, 0, 1, screen_height))
         collider_right = actor.Collider(pygame.Rect(screen_width + 1, 0, 1, screen_height))
 
-        #self.tile_colliders = {}
-
-        # for tile_type in self.assets.keys():
-        #     self.stone_colliders = [actor.Collider(pygame.Rect(tile['pos'][0] * self.tilemap.tile_size,
-        #                                                         tile['pos'][1] * self.tilemap.tile_size,
-        #                                                         self.tilemap.tile_size, self.tilemap.tile_size))
-        #                             for tile in self.tilemap.tilemap.values() if tile['type'] == tile_type]
-
-
         """
         self.collider_ground = actor.Collider(
             pygame.Rect(0, screen_height-40, screen_width, 40), color="chartreuse4"
@@ -89,8 +80,6 @@ class Game:
         
         self.colliders = pygame.sprite.Group(
             collider_left, collider_right,
-            #*self.grass_colliders,  # Add grass colliders
-            #*self.stone_colliders  # Add stone colliders
             #self.collider_ground,
             #*self.level.get_tiles()
         )
@@ -157,7 +146,7 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
-    game.player = actor.Player(0, 0, game)
+    game.player = actor.Player(50, 600, game)
     game.loop()
 
 
