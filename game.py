@@ -35,19 +35,21 @@ class Game:
         self.assets = {
             'background' : load_image('sewerbackground.png'),
             'grass' : load_images('tiles/grass'),
-            'stone' : load_images('tiles/stone'),
+            'stone' : load_images('tiles/Stone'),
             'large_decor' : load_images('tiles/large_decor'),
             'decor' : load_images('tiles/decor'),
             'lava' : load_images('tiles/lava'),
             'traps' : load_images('traps'),
+            'portal' : load_images('tiles/Portal'),
         }
         
         #print(screen_height)
         #print(screen_width)
         #print(self.assets)
+        #self.max_levels = 2
 
         self.tilemap = Tilemap(self, 16)
-        self.tilemap.load('map.json')
+        self.tilemap.load('map1.json')
 
         #self.level = Level1(level1_map, self.screen)
 
@@ -63,8 +65,8 @@ class Game:
         # colliders put right off-screen on both sides in order
         # to keep player from walking off the edge
 
-        #collider_left = actor.Collider(pygame.Rect(-1, 0, 1, screen_height))
-        #collider_right = actor.Collider(pygame.Rect(screen_width + 1, 0, 1, screen_height))
+        collider_left = actor.Collider(pygame.Rect(-1, 0, 1, screen_height))
+        collider_right = actor.Collider(pygame.Rect(screen_width + 1, 0, 1, screen_height))
 
         """
         self.collider_ground = actor.Collider(
@@ -77,7 +79,7 @@ class Game:
 
         
         self.colliders = pygame.sprite.Group(
-            #collider_left, collider_right,
+            collider_left, collider_right,
             #self.collider_ground,
             #*self.level.get_tiles()
         )
@@ -136,8 +138,8 @@ class Game:
                 self.player.update(self.colliders, self.tilemap, (self.movement[0] - self.movement[1], 0))
                 self.player.render(self.screen)
 
-                pygame.draw.rect(self.screen, (0,255,0), (0,544,16,1))
-                pygame.draw.rect(self.screen, (0,0,255), (0,572,16,1))
+                #pygame.draw.rect(self.screen, (0,255,0), (0,544,16,1))
+                #pygame.draw.rect(self.screen, (0,0,255), (0,572,16,1))
                 #self.collider_ground.render(self.screen)
                 pygame.display.flip()
                 self.clock.tick(60)

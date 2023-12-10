@@ -11,7 +11,6 @@ class Editor:
         pygame.display.set_caption('Editor')
         self.screen = pygame.display.set_mode((1600, 704))
         #self.display = pygame.Surface((320,240))                   # Creates a smaller display for the small player to make it look bigger
-
         self.clock = pygame.time.Clock()
 
         self.assets = {                                             # Dictionary of all the assets
@@ -21,6 +20,7 @@ class Editor:
             'stone' : load_images('tiles/Stone'),
             'lava' : load_images('tiles/lava'),
             'traps' : load_images('traps'),
+            'portal' : load_images('tiles/Portal'),
            
         }
 
@@ -29,7 +29,7 @@ class Editor:
         self.tilemap = Tilemap(self, tile_size=16)                          # Sets tiles
 
         try:
-            self.tilemap.load('map.json')
+            self.tilemap.load('map3.json')
         except FileNotFoundError:
             pass
         
@@ -125,7 +125,7 @@ class Editor:
                     if event.key == pygame.K_g:
                         self.ongrid = not self.ongrid
                     if event.key == pygame.K_o:
-                        self.tilemap.save('map.json')
+                        self.tilemap.save('map3.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:    

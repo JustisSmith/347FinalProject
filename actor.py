@@ -29,6 +29,8 @@ class Kinematics:
         self.vel_y = 0
         self.accel_x = 0
         self.accel_y = 0
+        self.level = 1
+        self.max_level = 3
 
         self.x = x
         self.y = y
@@ -49,10 +51,10 @@ class Kinematics:
         self.parent.rect.x = self.parent.rect.x + self.vel_x 
 
         self.x += self.vel_x 
+        pos = (self.x,self.parent.rect.bottom)
         
         for rect in tilemap.physics_rects_around((self.x, self.y)):
             if self.rect.colliderect(rect):
-                #print("Variant: " + rect['type'] + "\n")
                 if self.vel_x > 0:
                     correction = rect.left - self.rect.right
                 else:
@@ -61,6 +63,19 @@ class Kinematics:
                 self.parent.rect.x += correction
                 self.x += correction
                 self.vel_x = 0
+
+                for tile in tilemap.tiles_around(pos):
+                    if((tile['type'] == 'lava') or (tile['type'] == 'traps')):
+                        self.x = 0
+                        self.y = 0
+                    elif(tile['type'] == 'portal'):
+                        self.level += 1
+                        if(self.level <= self.max_level):
+                            self.map_level = f'map{self.level}.json'
+                            #print(self.map_level)
+                            tilemap.load(self.map_level)
+                            self.x = 0
+                            self.y = 0
                 return
         #self.x += self.vel_x
 
@@ -88,24 +103,32 @@ class Kinematics:
         self.parent.rect.y = self.parent.rect.y + self.vel_y
 
         self.y += self.vel_y
-        print(f"{self.parent.rect.bottom=}")
+        pos = (self.x,self.parent.rect.bottom)
+        #print(f"{self.parent.rect.bottom=}")
         #player_rect = self.parent.rect.copy()
         #player_rect.y += 1
         for rect in tilemap.physics_rects_around((self.x,self.parent.rect.bottom)):
             if self.rect.colliderect(rect):
-                print(f"{rect.top=}, {self.vel_y=}")
+                #print(f"{rect.top=}, {self.vel_y=}")
                 if self.vel_y > 0:
                     correction = rect.top - self.rect.bottom
                 else:
                     correction = rect.bottom - self.rect.top
-                print(correction)
+                #print(correction)
                 self.parent.rect.y += correction
                 self.y += correction
                 self.vel_y = 0
+
+                for tile in tilemap.tiles_around(pos):
+                    if((tile['type'] == 'lava') or (tile['type'] == 'traps')):
+                        self.x = 0
+                        self.y = 0
                 #self.parent.rect.y = int(self.parent.rect.y / tilemap.tile_size) * tilemap.tile_size
                 #self.y = self.parent.rect.y
                 return
         #self.y += self.vel_y
+
+
 
 
         """
