@@ -33,6 +33,7 @@ class Animator:
         self.anim_curr = None
         self.anim_i = 0
         self.flip_x = False
+        self.rotate_x = False
 
     def registerAnim(self, name, *frames):
         """
@@ -59,6 +60,11 @@ class Animator:
         if flip != self.flip_x:
             self.flip_x = flip
             self.surf = pygame.transform.flip(self.surf, True, False)
+
+    # def rotateSprite(self, rotate):       #working on rotating sprite while wall sliding
+    #     if rotate != self.rotate_x:
+    #         self.rotate_x = rotate
+    #         self.surf = pygame.transform.rotate(self.surf, 90)
 
     def change(self, name):
         """
