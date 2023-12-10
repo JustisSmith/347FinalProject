@@ -152,7 +152,7 @@ class FirstFallingState(PlayerState):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
 
-        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 20 pixels on left and right side for collision detection
+        player_rect = self.parent.rect.inflate(10, 0)    #increases player sprite hitbox by x pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
@@ -173,7 +173,7 @@ class WallSlideState(PlayerState):
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
-            player_rect = self.parent.rect.inflate(20, 0)
+            player_rect = self.parent.rect.inflate(10, 0)
             if player_rect.colliderect(wall_rect):
                 if not pressed[keys.K_SPACE]:
                     self.jump = True
@@ -209,7 +209,7 @@ class WallSlideState2(PlayerState):
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
-            player_rect = self.parent.rect.inflate(20, 0)
+            player_rect = self.parent.rect.inflate(10, 0)
             if player_rect.colliderect(wall_rect):
                 if not pressed[keys.K_SPACE]:
                     self.jump = True
@@ -242,7 +242,7 @@ class WallJumpState(PlayerState):
         self.parent.kinem.accel_y = 0.5
         self.parent.kinem.vel_y = -12
 
-        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+        player_rect = self.parent.rect.inflate(10, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
@@ -291,7 +291,7 @@ class WallJumpState2(PlayerState):
         if self.parent.kinem.vel_y == 0:
             return WallFallingState(self.parent, self.flip)
         
-        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+        player_rect = self.parent.rect.inflate(10, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
@@ -321,7 +321,7 @@ class WallFallingState(PlayerState):
         if self.parent.kinem.vel_y == 0:
             return StandingState(self.parent, self.flip)
 
-        player_rect = self.parent.rect.inflate(20, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+        player_rect = self.parent.rect.inflate(10, 0)    #increases player sprite hitbox by x pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
