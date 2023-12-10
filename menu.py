@@ -57,7 +57,7 @@ def main_menu():
         screen.blit(background_image, (0, 0))
 
         # Display main menu text
-        draw_text("Game Title", menu_title_font, (0, 255, 255), screen_width // 2, screen_height // 4)
+        draw_text("Super Slime Guy", menu_title_font, (0, 255, 255), screen_width // 2, screen_height // 4)
         draw_text("Main Menu", font, (255, 255, 255), screen_width // 2, screen_height // 2.5)
         
         draw_text("Press (s) to Start Game", font, (255, 0, 0), screen_width // 2, screen_height // 2)
@@ -96,7 +96,7 @@ def options_menu():
 
         pygame.display.flip()
 
-# New function for the controls menu
+#  function for the controls menu
 def controls_menu():
     running = True
 
@@ -119,7 +119,8 @@ def controls_menu():
         draw_text("Movement: use the ARROW keys to move from left to right  ", font, (255,255, 0), screen_width // 2, (screen_height // 3) + 25)
         draw_text("Jump: use the SPACE key to jump  ", font, (255,255,0), screen_width // 2, (screen_height // 3) + 75)
         draw_text("Wall slide: approach a wall and jump to begin sliding ", font, (255,255,0), screen_width // 2, (screen_height // 3) + 125)
-
+        draw_text("tips: avoid any object that isn't a wall or floor ", font, (255,255,0), screen_width // 2, (screen_height // 3) + 175)
+        
         draw_text("Press (q) to go Back to Options Menu", font, (255, 0, 0), screen_width // 2, (screen_height // 2) + 150)
 
         
