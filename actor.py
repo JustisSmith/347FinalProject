@@ -30,6 +30,7 @@ class Kinematics:
         self.accel_x = 0
         self.accel_y = 0
         self.level = 1
+        #self.next_level = 2
         self.max_level = 3
 
         self.x = x
@@ -66,16 +67,30 @@ class Kinematics:
 
                 for tile in tilemap.tiles_around(pos):
                     if((tile['type'] == 'lava') or (tile['type'] == 'traps')):
-                        self.x = 50
-                        self.y = 600
+                        if self.level == 1:
+                            self.x = 50
+                            self.y = 800
+                        elif self.level == 2:
+                            self.x = 850
+                            self.y = 170
+                        elif self.level == 3:
+                            self.x = 50
+                            self.y = 900
                     elif(tile['type'] == 'portal'):
                         self.level += 1
                         if(self.level <= self.max_level):
                             self.map_level = f'map{self.level}.json'
                             #print(self.map_level)
                             tilemap.load(self.map_level)
-                            self.x = 50
-                            self.y = 600
+                            if self.level == 1:
+                                self.x = 50
+                                self.y = 800
+                            elif self.level == 2:
+                                self.x = 850
+                                self.y = 170
+                            elif self.level == 3:
+                                self.x = 50
+                                self.y = 50
                 return
         #self.x += self.vel_x
 
@@ -126,8 +141,15 @@ class Kinematics:
 
                 for tile in tilemap.tiles_around(pos):
                     if((tile['type'] == 'lava') or (tile['type'] == 'traps')):
-                        self.x = 50
-                        self.y = 600
+                        if self.level == 1:
+                            self.x = 50
+                            self.y = 800
+                        elif self.level == 2:
+                            self.x = 850
+                            self.y = 170
+                        elif self.level == 3:
+                            self.x = 50
+                            self.y = 900
                 #self.parent.rect.y = int(self.parent.rect.y / tilemap.tile_size) * tilemap.tile_size
                 #self.y = self.parent.rect.y
                 return
@@ -299,7 +321,7 @@ class Player(pygame.sprite.Sprite):
         surf.blit(
             self.anim.surf, self.rect, area=self.anim.rect
         )
-        pygame.draw.rect(surf, (255,0,0), self.rect.inflate(10, 0), width=2)      #debug: shows player hitbox
+        #pygame.draw.rect(surf, (255,0,0), self.rect.inflate(10, 0), width=2)      #debug: shows player hitbox
         self.anim.next()
 
 class Collider(pygame.sprite.Sprite):
