@@ -4,7 +4,7 @@ import actor
 from settings import *
 from level1 import Level1
 from enum import Enum
-from menu import main_menu, options_menu
+from menu import main_menu, options_menu, sound_enabled
 from utils import load_image, load_images  
 from tilemap import Tilemap
 from anim import Animator
@@ -105,7 +105,12 @@ class Game:
         run perpetually until the game is
         over or is closed.
         """
-
+        ## set up music loop ##
+        if sound_enabled == True:
+            pygame.mixer.init()
+            pygame.mixer.music.load("data\music.wav")
+            pygame.mixer.play(-1)
+        #######################
         while True:
             if self.game_state == GameState.MENU:
                 current_menu = main_menu()
