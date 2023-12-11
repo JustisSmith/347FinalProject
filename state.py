@@ -291,7 +291,7 @@ class WallJumpState2(PlayerState):
         if self.parent.kinem.vel_y == 0:
             return WallFallingState(self.parent, self.flip)
         
-        player_rect = self.parent.rect.inflate(10, 0)    #increases player sprite hitbox by 5 pixels on left and right side for collision detection
+        player_rect = self.parent.rect.inflate(10, 0)    #increases player sprite hitbox by x pixels on left and right side for collision detection
 
         for wall in self.parent.game.colliders:
             wall_rect = wall.rect
@@ -328,3 +328,4 @@ class WallFallingState(PlayerState):
             if player_rect.colliderect(wall_rect):
                 if self.parent.rect.left > wall_rect.left or self.parent.rect.left < wall_rect.left:    #if collide with wall to right or left
                     return WallSlideState(self.parent, self.flip)  
+
