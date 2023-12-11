@@ -11,7 +11,7 @@ pygame.display.set_caption("Main Menu")
 
 # Load background image
 background_image = pygame.image.load("menu_background.png")
-background_image = pygame.transform.scale(background_image, (screen_width, screen_height))  # Scales the image to fit the screen
+background_image = pygame.transform.scale(background_image, (1920, 1080))  # Scales the image to fit the screen
 
 # Defined color constants 
 BLACK = (0, 0, 0)
