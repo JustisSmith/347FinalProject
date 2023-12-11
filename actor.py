@@ -66,8 +66,8 @@ class Kinematics:
 
                 for tile in tilemap.tiles_around(pos):
                     if((tile['type'] == 'lava') or (tile['type'] == 'traps')):
-                        self.x = 0
-                        self.y = 0
+                        self.x = 50
+                        self.y = 600
                     elif(tile['type'] == 'portal'):
                         self.level += 1
                         if(self.level <= self.max_level):
