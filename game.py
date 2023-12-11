@@ -109,7 +109,7 @@ class Game:
         if sound_enabled == True:
             pygame.mixer.init()
             pygame.mixer.music.load("data\music.wav")
-            pygame.mixer.play(-1)
+            pygame.mixer.music.play(-1)
         #######################
         while True:
             if self.game_state == GameState.MENU:
