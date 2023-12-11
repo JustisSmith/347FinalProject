@@ -132,8 +132,6 @@ class Game:
                         self.assets['background'] = load_image('sewerbackground3.png')
                     elif self.player.kinem.level == 3:
                         self.assets['background'] = load_image('hellbackground1.png')
-                    
-                #self.camera.center = self.player.rect.center
 
                 self.screen.fill("black")
                 self.screen.blit(self.assets['background'], (0,0))
