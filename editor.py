@@ -9,7 +9,7 @@ class Editor:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Editor')
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0))
         #self.display = pygame.Surface((320,240))                   # Creates a smaller display for the small player to make it look bigger
         self.clock = pygame.time.Clock()
 
@@ -29,7 +29,7 @@ class Editor:
         self.tilemap = Tilemap(self, tile_size=16)                          # Sets tiles
 
         try:
-            self.tilemap.load('map3.json')
+            self.tilemap.load('map2.json')
         except FileNotFoundError:
             pass
         
@@ -60,7 +60,7 @@ class Editor:
             current_tile_img.set_alpha(100)
 
             mpos = pygame.mouse.get_pos()
-            mpos = ((mpos[0] / RENDER_SCALE), (mpos[1] / RENDER_SCALE))
+            #mpos = ((mpos[0] / RENDER_SCALE), (mpos[1] / RENDER_SCALE))
             tile_pos = (int((mpos[0] + self.scroll[0]) // self.tilemap.tile_size), int((mpos[1] + self.scroll[1]) // self.tilemap.tile_size))
 
             if self.ongrid:
@@ -125,7 +125,7 @@ class Editor:
                     if event.key == pygame.K_g:
                         self.ongrid = not self.ongrid
                     if event.key == pygame.K_o:
-                        self.tilemap.save('map3.json')
+                        self.tilemap.save('map2.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:    
