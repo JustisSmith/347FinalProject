@@ -8,6 +8,8 @@ from menu import main_menu, options_menu
 from utils import load_image, load_images  
 from tilemap import Tilemap
 from anim import Animator
+from timer import Timer
+
 
 class GameState(Enum):
     MENU = 0
@@ -29,6 +31,8 @@ class Game:
         #print(screen_width)
         #self.screen = pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
+
+        self.timer = Timer()  # an instance of the Timer class
 
         self.movement = [False,False]
 
@@ -151,6 +155,10 @@ class Game:
                 #pygame.draw.rect(self.screen, (0,255,0), (0,544,16,1))
                 #pygame.draw.rect(self.screen, (0,0,255), (0,572,16,1))
                 #self.collider_ground.render(self.screen)
+
+                # Renders the timer
+                self.timer.render(self.screen)
+                
                 pygame.display.flip()
                 self.clock.tick(60)
 
