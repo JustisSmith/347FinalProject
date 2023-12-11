@@ -92,8 +92,6 @@ class Kinematics:
                                 self.x = 50
                                 self.y = 50
                 return
-        #self.x += self.vel_x
-
 
         """
         frame_movementx = (movement[0] + self.vel_x)
@@ -150,10 +148,7 @@ class Kinematics:
                         elif self.level == 3:
                             self.x = 50
                             self.y = 900
-                #self.parent.rect.y = int(self.parent.rect.y / tilemap.tile_size) * tilemap.tile_size
-                #self.y = self.parent.rect.y
                 return
-        #self.y += self.vel_y
 
 
 
