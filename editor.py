@@ -49,6 +49,7 @@ class Editor:
 
         while True:
             self.screen.fill((0,0,0))
+            self.screen.blit(load_image('hellbackground1.png') , (0,0))    #to set background for level you are editing
 
             self.scroll[0] += (self.movement[1] - self.movement[0]) * 2
             self.scroll[1] += (self.movement[3] - self.movement[2]) * 2
