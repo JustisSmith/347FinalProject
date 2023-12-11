@@ -33,8 +33,8 @@ class Game:
         self.movement = [False,False]
 
         self.assets = {
-            #'background' : load_image('mountainbackground1.png'),      #level 1 background
-            'background' : load_image('sewerbackground2.png'),          #level 2 background
+            'background' : load_image('mountainbackground1.png'),      #level 1 background
+            #'background' : load_image('sewerbackground2.png'),          #level 2 background
             'grass' : load_images('tiles/grass'),
             'stone' : load_images('tiles/Stone'),
             'large_decor' : load_images('tiles/large_decor'),
@@ -125,6 +125,11 @@ class Game:
                     if self.game_state == GameState.PLAY and event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             self.set_game_state(GameState.MENU)
+                    
+                    if self.player.kinem.level == 1:                                            #changes background for level
+                        self.assets['background'] = load_image('mountainbackground1.png')
+                    elif self.player.kinem.level == 2:
+                        self.assets['background'] = load_image('sewerbackground2.png')
                     
                 #self.camera.center = self.player.rect.center
 
