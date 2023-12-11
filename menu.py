@@ -56,7 +56,7 @@ def main_menu():
         screen.blit(background_image, (0, 0))
 
         # Display main menu text
-        draw_text("Super Slime Guy", menu_title_font, (0, 255, 255), screen_width // 2, screen_height // 4)
+        draw_text("Super Slime Guy", menu_title_font, (0, 255, 0), screen_width // 2, screen_height // 4)
         draw_text("Main Menu", font, (255, 255, 255), screen_width // 2, screen_height // 2.5)
         
         draw_text("Press (s) to Start Game", font, (255, 0, 0), screen_width // 2, screen_height // 2)
