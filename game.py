@@ -34,7 +34,7 @@ class Game:
 
         self.assets = {
             'background' : load_image('mountainbackground1.png'),      #level 1 background
-            #'background' : load_image('sewerbackground2.png'),          #level 2 background
+            #'background' : load_image('sewerbackground3.png'),          #level 2 background
             'grass' : load_images('tiles/grass'),
             'stone' : load_images('tiles/Stone'),
             'large_decor' : load_images('tiles/large_decor'),
@@ -129,7 +129,9 @@ class Game:
                     if self.player.kinem.level == 1:                                            #changes background for level
                         self.assets['background'] = load_image('mountainbackground1.png')
                     elif self.player.kinem.level == 2:
-                        self.assets['background'] = load_image('sewerbackground2.png')
+                        self.assets['background'] = load_image('sewerbackground3.png')
+                    elif self.player.kinem.level == 3:
+                        self.assets['background'] = load_image('hellbackground1.png')
                     
                 #self.camera.center = self.player.rect.center
 
@@ -156,7 +158,7 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
-    game.player = actor.Player(50, 600, game)
+    game.player = actor.Player(50, 800, game)
     game.loop()
 
 
